@@ -1,13 +1,9 @@
 from django import forms
-from .models import MessOption, Leave, Bonafide, DayPass
+from .models import Leave
 from django.forms.widgets import TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime
 
-class MessForm(forms.ModelForm):
-    class Meta:
-        model = MessOption
-        fields = ['mess']
 
 class LeaveForm(forms.ModelForm):
     dateStart = forms.CharField(label='Departure Date', widget=forms.TextInput(attrs={'class': 'datepicker'}))
@@ -35,7 +31,7 @@ class LeaveForm(forms.ModelForm):
     class Meta:
         model = Leave
         exclude = ['dateTimeStart', 'dateTimeEnd', 'student',
-                   'approvedBy', 'approved', 'disapproved', 'inprocess', 'comment', 'corrPhone']
+                   'approved', 'disapproved', 'inprocess', 'comment', 'corrPhone']
         widgets = {
             'reason': forms.Textarea(attrs={'class': 'materialize-textarea validate'}),
             'corrAddress': forms.Textarea(attrs={'class': 'materialize-textarea validate'}),
@@ -46,44 +42,35 @@ class LeaveForm(forms.ModelForm):
             'corrPhone': _('Contact No. during Leave'),
         }
 
-class BonafideForm(forms.ModelForm):
-    class Meta:
-        model = Bonafide
-        fields = ['reason', 'otherReason']
+# class printBonafideForm(forms.Form):
+#     text = forms.CharField(required=True, label='Body Text', widget=forms.Textarea(attrs={'class': 'materialize-textarea'}))
 
-        labels = {
-            'otherReason': _('Please mention if other reason'),
-        }
+# class DayPassForm(forms.ModelForm):
+#     date = forms.CharField(label='Date', widget=forms.TextInput(attrs={'class': 'datepicker'}))
+#     time = forms.CharField(label='Out Time', widget=forms.TextInput(attrs={'class': 'timepicker'}))
+#     intime = forms.CharField(label='In Time', widget=forms.TextInput(attrs={'class': 'timepicker'}))
+#     def clean(self):
+#         cleaned_data = super(DayPassForm, self).clean()
+#         date = datetime.strptime(cleaned_data['date'], '%d %B, %Y').date()
+#         time = datetime.strptime(cleaned_data['time'], '%H:%M').time()
+#         intime = datetime.strptime(cleaned_data['intime'], '%H:%M').time()
+#         date_time_start = datetime.combine(date, time)
+#         if datetime.now() >= date_time_start:
+#             self.add_error('date', "Daypass cannot be issued before the present date and time")
+#         if (date_time_start-datetime.now()).days>2:
+#             self.add_error('date', "Can apply for daypass within 2 days")
+#         return cleaned_data
 
-class printBonafideForm(forms.Form):
-    text = forms.CharField(required=True, label='Body Text', widget=forms.Textarea(attrs={'class': 'materialize-textarea'}))
-
-class DayPassForm(forms.ModelForm):
-    date = forms.CharField(label='Date', widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    time = forms.CharField(label='Out Time', widget=forms.TextInput(attrs={'class': 'timepicker'}))
-    intime = forms.CharField(label='In Time', widget=forms.TextInput(attrs={'class': 'timepicker'}))
-    def clean(self):
-        cleaned_data = super(DayPassForm, self).clean()
-        date = datetime.strptime(cleaned_data['date'], '%d %B, %Y').date()
-        time = datetime.strptime(cleaned_data['time'], '%H:%M').time()
-        intime = datetime.strptime(cleaned_data['intime'], '%H:%M').time()
-        date_time_start = datetime.combine(date, time)
-        if datetime.now() >= date_time_start:
-            self.add_error('date', "Daypass cannot be issued before the present date and time")
-        if (date_time_start-datetime.now()).days>2:
-            self.add_error('date', "Can apply for daypass within 2 days")
-        return cleaned_data
-
-    class Meta:
-        model = DayPass
-        exclude = ['student', 'approvedBy',
-                    'approved', 'comment', 'disapproved', 'inprocess', 'dateTime','inTime']
-        widgets = {
-            'reason': forms.Textarea(attrs={'class': 'materialize-textarea'}),
-            'corrAddress': forms.Textarea(attrs={'class': 'materialize-textarea validate'}),
-        }
-        labels = {
-            'corrAddress': _(" Location you're visiting "),
+#     class Meta:
+#         model = DayPass
+#         exclude = ['student', 'approvedBy',
+#                     'approved', 'comment', 'disapproved', 'inprocess', 'dateTime','inTime']
+#         widgets = {
+#             'reason': forms.Textarea(attrs={'class': 'materialize-textarea'}),
+#             'corrAddress': forms.Textarea(attrs={'class': 'materialize-textarea validate'}),
+#         }
+#         labels = {
+#             'corrAddress': _(" Location you're visiting "),
             
-        }
+#         }
         

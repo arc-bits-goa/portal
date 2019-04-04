@@ -7,6 +7,7 @@ class LDAPAuthBackend:
         try:
             with urlopen("http://10.10.10.20/auth.php?" + urlencode({'u': username, 'p': password}), timeout=5) as authfile:
                 string = authfile.read()
+                print("BANGF")
                 print(string)
                 if string.decode('utf-8') == 'true':
                     try:

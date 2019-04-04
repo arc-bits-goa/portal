@@ -18,32 +18,18 @@ from .config import PRODUCTION, DB_NAME, DB_PASSWORD, DB_USER
 DEBUG = True
 
 from tools.dev_info import SECRET_KEY
-from tools.dev_info import EMAIL_HOST_PASSWORD
-# production = True if "PROD" in os.environ and os.environ.get("PROD") == "True" else False
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
-
 
 
 if PRODUCTION:
-    ALLOWED_HOSTS = ['10.10.10.121']
+    ALLOWED_HOSTS = ['10.10.10.121','0.0.0.0','127.0.0.1']
 else:
     ALLOWED_HOSTS = []
-
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'swdstatus@gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-# Application definition
 
 INSTALLED_APPS = [
     'jet.dashboard',
@@ -104,10 +90,6 @@ else:
     )
 
 ROOT_URLCONF = 'swd.urls'
-
-GRAPHENE = {
-    'SCHEMA': 'swd.schema.schema'
-}
 
 TEMPLATES = [
     {
@@ -171,10 +153,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.11/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -207,7 +185,5 @@ WEBPACK_LOADER = {
 }
 
 LOGIN_URL = '/login'
-
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
