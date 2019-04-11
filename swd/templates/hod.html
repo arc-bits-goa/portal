@@ -1,0 +1,140 @@
+{% extends 'hodbase.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="section no-pad-bot" id="index-banner">
+    </div>
+
+    <div>
+        <div class="section">
+            <!--   Icon Section   -->    
+            <div class="row">
+                {% if option == 1 %}
+                <div class="col s6 l12">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Project Applications</span>
+                            <table class="bordered highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Project No.</th>
+                                        <th>Faculty Name </th>
+                                        <th>Student Name </th>
+                                        <th>Course Code</th>
+                                        <th>Approval Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for project in projects %}
+                                    <tr class="clickable" onclick="leaveclick(this)" data-id="{{ project.id }}">
+                                        <td>{{ project.id }}</td>
+                                        <td>{{ project.faculty.name }}</td>
+                                        <td>{{ project.studentname }} | {{ project.studentId }}</td>
+                                        <td>{{ project.department }} | {{ project.courseCode }}</td>
+                                        <td>{% if project.approved == 1 %}Approved{% elif project.disapproved == 1 %}Disapproved{% else %}In Process{% endif %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="container">
+                    <div class="row">
+                    <div class="col s6 l12">
+                        <div class="card">
+                            <div class="card-content">
+                                <span class="card-title">Project Dash</span>
+                                <div class="row">
+                                    <div class="col s8">
+                                        <div class="row">
+                                            <div class="col s6">
+                                                Faculty Name:
+                                            </div>
+                                            <div class="col s6">
+                                                {{ project.faculty.name }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6">
+                                                Student Name:
+                                            </div>
+                                            <div class="col s6">
+                                                {{ project.studentname }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col s6">
+                                                Student ID:
+                                            </div>
+                                            <div class="col s6">
+                                                {{ project.studentId }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col s6">
+                                                Course Code: 
+                                            </div>
+                                            <div class="col s6">
+                                                {{ project.department }} - {{ project.courseCode }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6">
+                                               Project Title: 
+                                            </div>
+                                            <div class="col s6">
+                                                {{ project.title }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div style="background-color:#eee; padding:15px;">
+                                    <div class="row">
+                                        <div class="col s4">
+                                            <input name="group1" type="radio" class="with-gap" id="leave-approve" value="1" {% if project.approved == True %} checked="checked" {% endif %}/>
+                                            <label for="leave-approve">Approve</label>
+                                        </div>
+                                        <div class="col s4">
+                                            <input name="group1" type="radio" class="with-gap" id="leave-disapprove" value="2" {% if project.disapproved == True %} checked="checked" {% endif %}/>
+                                            <label for="leave-disapprove">Disapprove</label>
+                                        </div>
+                                        <div class="col s4">
+                                            <input name="group1" type="radio" class="with-gap" id="leave-process" value="3" {% if project.inprocess == True %} checked="checked" {% endif %}/>
+                                            <label for="leave-process">In Process</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s6">
+                                            <a href="/warden" class="btn btn-block bg-green waves-effect" >CANCEL</a>
+                                        </div>
+                                        <div class="col s6 right-align">
+                                            <button class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</button>
+                                        </div>
+                                    </div>
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        <br><br>
+    </div>
+
+{% endblock %}
+

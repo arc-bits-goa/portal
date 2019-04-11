@@ -13,7 +13,7 @@ import xlrd, xlwt
 from braces import views
 from django.contrib.auth.models import User
 from django.db.models import Q
-from .forms import LeaveForm
+from .forms import ProjectForm
 
 
 def is_hod(user):
@@ -29,12 +29,13 @@ def login_success(request):
     return HttpResponse("Success!")
 
 @login_required
-def student(request):
-    student = Student.objects.get(user=request.user)
+@user_passes_test(is_faculty)
+def faculty(request):
+    faculty = Faculty.objects.filter(user=request.user)
     context ={
-        'student' : student,
+        'faculty' : faculty,
     }
-    return render(request, "student.html",)
+    return render(request, "faculty.html",)
 
 
 @csrf_protect
@@ -46,8 +47,8 @@ def loginform(request):
         if Hod.objects.filter(user=request.user):
             return redirect('/hod')
         if Faculty.objects.filter(user=request.user):
-            return redirect('/faculty')
-        return redirect('/student')
+            return redirect('/project')
+        return redirect('/')
 
     if request.POST:
         username = request.POST.get('username')
@@ -60,7 +61,7 @@ def loginform(request):
             if Hod.objects.filter(user=request.user):
                 return redirect('/hod')
             if Faculty.objects.filter(user=request.user):
-                return redirect('/faculty')
+                return redirect('/project')
             return redirect('student')
         else:
             messages.add_message(request, messages.INFO,  "Incorrect username or password", extra_tags='red')
@@ -78,80 +79,53 @@ def logoutform(request):
 @user_passes_test(is_hod)
 def hod(request):
     hod = Hod.objects.get(user=request.user)
-    leaves = Leave.objects.filter(department=Hod.department).order_by('approved', '-id')
+    projects = Project.objects.filter(department=hod.department).order_by('approved', '-id')
     context = {
         'option':1,
-        'warden': hod,
-        'leaves': leaves,
+        'hfuser': hod,
+        'project': projects,
     }
-    postContext = {}
-    if request.GET:
-        name = request.GET.get('name')
-        date = request.GET.get('date')
-        leavesearch=[]
-        for leave in leaves:
-            if name.lower() in leave.student.name.lower():
-                dt=str(leave.dateTimeStart.year)+'-'+str(leave.dateTimeStart.month).zfill(2)+'-'+str(leave.dateTimeStart.day).zfill(2)
-                if date == "" or date in dt:
-                    leavesearch.append(leave)
-        postContext = {
-            'leaves':leavesearch
+    postContext = {
+            'projects':projects
         }
-    return render(request, "warden.html", dict(context, **postContext))
-    return render(request,"warden.html",{})
+    return render(request, "hod.html", dict(context, **postContext))
 
+# @login_required
+# @user_passes_test(is_faculty)
+# def faculty(request):
+#     faculty = Faculty.objects.filter(user=request.user)
+#     return render(request, "hostelsuperintendent.html", context)
 @login_required
 @user_passes_test(is_faculty)
-def faculty(request):
-    faculty = Faculty.objects.filter(user=request.user)
-    return render(request, "hostelsuperintendent.html", context)
-
-def leave(request):
-    student = Student.objects.get(user=request.user)
-    form = LeaveForm()
+def project(request):
+    faculty = Faculty.objects.get(user=request.user)
+    form = ProjectForm()
+    web = 'base.html'
+    if request.user is not None:
+            login(request, request.user)
+            if Hod.objects.filter(user=request.user):
+                web ='hodbase.html'
     context = {
         'option' : 0,
-        'student': student,
-        'form': form
+        'hfuser': faculty,
+        'form': form,
+        'web':web
     }
 
-    leaveContext = {
-        'leaves': Leave.objects.filter(student=student),
+    projectContext = {
+        'projects': Project.objects.filter(faculty=faculty),
     }
 
     if request.POST:
-        form = LeaveForm(request.POST)
+        form = ProjectForm(request.POST)
         if form.is_valid():
-            leaveform = form.save(commit=False)
-            dateStart = datetime.strptime(request.POST.get('dateStart'), '%d %B, %Y').date()
-            timeStart = datetime.strptime(request.POST.get('timeStart'), '%H:%M').time()
-            dateTimeStart = datetime.combine(dateStart, timeStart)
-            dateEnd = datetime.strptime(request.POST.get('dateEnd'), '%d %B, %Y').date()
-            timeEnd = datetime.strptime(request.POST.get('timeEnd'), '%H:%M').time()
-            dateTimeEnd = datetime.combine(dateEnd, timeEnd)
-            leaveform.corrPhone = request.POST.get('phone_number')
-            leaveform.dateTimeStart = make_aware(dateTimeStart)
-            leaveform.dateTimeEnd = make_aware(dateTimeEnd)
-            leaveform.student = student
-            print(request.POST.get('consent'))
-            leaveform.save()
-            if config.EMAIL_PROD:
-                email_to=[Warden.objects.get(hostel=HostelPS.objects.get(student=student).hostel).email]
-            else:
-                email_to=["swdbitstest@gmail.com"]                                                                     # For testing 
-            mailObj=Leave.objects.latest('id')
-            mail_subject="New Leave ID: "+ str(mailObj.id)
-            mail_message="Leave Application applied by "+ mailObj.student.name +" with leave id: " + str(mailObj.id) + ".\n"
-            mail_message=mail_message + "Parent name: " + mailObj.student.parentName + "\nParent Email: "+ mailObj.student.parentEmail + "\nParent Phone: " + mailObj.student.parentPhone
-            mail_message=mail_message + "\nConsent type: " + mailObj.consent
-            send_mail(mail_subject,mail_message,settings.EMAIL_HOST_USER,email_to,fail_silently=False)
+            projectform = form.save(commit=False)
+            projectform.faculty = faculty
+            # print(request.POST.get('consent'))
+            projectform.save()
 
             context = {
                 'option': 1,
-                'dateStart': request.POST.get('dateStart'),
-                'dateEnd': request.POST.get('dateEnd'),
-                'timeStart': request.POST.get('timeStart'),
-                'timeEnd': request.POST.get('timeEnd'),
             }
         else:
             context = {
@@ -159,7 +133,42 @@ def leave(request):
                 'form': form
             }
             print(form.errors)
-    return render(request, "leave.html", dict(context, **leaveContext))
+    return render(request, "project.html", dict(context, **projectContext))
 
+@login_required
+@user_passes_test(is_hod)
+def hodprojectapprove(request, project):
+    project = Project.objects.get(id=project)
+    hod = Hod.objects.get(user=request.user)
+
+    # leaves = Leave.objects.filter(student=leave.student)
+
+    context = {
+        'option': 2,
+        'hod': hod,
+        'project': project,
+        'faculty': project.faculty
+    }
+
+    if request.POST:
+        approved = request.POST.getlist('group1')
+        print(approved)
+        
+        if '1' in approved:
+            project.approved=True
+            project.disapproved = False
+            project.inprocess = False
+        elif '2' in approved:
+            project.disapproved=True
+            project.approved = False
+            project.inprocess = False
+        else:
+            project.inprocess = True
+            project.approved = False
+            project.disapproved = False
+        project.save()
+        return redirect('hod')
+
+    return render(request, "hod.html", context)
 
 

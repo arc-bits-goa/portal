@@ -18,12 +18,11 @@ urlpatterns = [
     url(r'^accounts/profile/', views.login_success, name='login-success'),
 
 
-    url(r'^dashboard/', views.student, name="student"),
+    url(r'^project/', views.project, name="faculty"),
     url(r'^hod/$', views.hod, name="hod"),
-    url(r'^hostelsuperintendent/$', views.faculty, name="faculty"),
-    url(r'^leave/', views.leave, name="leave"),
+    # url(r'^leave/', views.leave, name="leave"),
     
-    # url(r'^warden/([0-9]+)/$', views.wardenleaveapprove, name="wardenleaveapprove"),
+    url(r'^hod/([0-9]+)/$', views.hodprojectapprove, name="hodprojectapprove"),
     # url(r'^hostelsuperintendent/([0-9]+)/$', views.hostelsuperintendentdaypassapprove, name="hostelsuperintendentdaypassapprove"),
     # url(r'^student/(?P<id>\d+)/$',views.studentDetails, name="studentDetails"),
 

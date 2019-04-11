@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %}
+{% extends web %} {% block content %}
 
 
 <div>
@@ -9,7 +9,7 @@
             <div class="col s6 l6">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title">Apply for Leave</span>
+                        <span class="card-title">Apply for Projects</span>
                         {% if option == 0 %}
                         <form method="POST">
                             {% csrf_token %}
@@ -20,13 +20,17 @@
                                   </div>
                                 {% endfor %}
                             </div>
+                            <br>
+                            Department Code: CHE, EEE, ECE, CS, MECH, INSTR, MATH, PHY, CHEM, ECON, BIO, HSS, BITS
+                            <br>
+                            Course Code: F266, F366, F367, F376, F377, F491, F382
+                            <br>
                             <div class="col-xs-4">
                                 <button class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</button>
                             </div>
                         </form>
                         {% elif option == 1 %}
-                            <p>Leave Successfully applied. Please wait for approval</p>
-                            <p>Leave applied from {{ dateStart }}({{ timeStart }}) to {{ dateEnd }}({{ timeEnd }})</p>
+                            <p>Project Successfully applied. Please wait for approval from HOD</p>
                         {% else %}
                             {% if form.errors %}
                                 {% for error in form.non_field_errors %}
@@ -54,6 +58,11 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                 <br>
+                            Department Code: CHE, EEE, ECE, CS, MECH, INSTR, MATH, PHY, CHEM, ECON, BIO, HSS, BITS
+                            <br>
+                            Course Code: F266, F366, F367, F376, F377, F491, F382
+                            <br>
                                 <div class="col-xs-4">
                                     <button class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</button>
                                 </div>
@@ -66,28 +75,28 @@
             <div class="col s6 l6">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title">Leave Applications</span>
+                        <span class="card-title">Project Applications</span>
                         <table class="striped">
                             <thead>
                                 <tr>
-                                    <th class="center-align">Leave ID.</th>
-                                    <th class="center-align">Duration</th>
+                                    <th class="center-align">Project ID.</th>
+                                    <th class="center-align">Student name</th>
+                                    <th class="center-align">Course Code</th>
                                     <th class="center-align">Approval Status</th>
-                                    <th class="center-align">Comments</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for leave in leaves %}
+                                {% for project in projects %}
                                 <tr>
-                                    <td class="center-align">{{ leave.id }}</td>
-                                    <td class="center-align">{{ leave.dateTimeStart|date:"d/M/y" }} --- {{ leave.dateTimeEnd|date:"d/M/y" }}</td>
+                                    <td class="center-align">{{ project.id }}</td>
+                                    <td class="center-align">{{ project.studentname }} - {{ project.studentId }}</td>
+                                    <td class="center-align">{{ project.department }} - {{ project.courseCode }}</td>
                                     <td class="center-align badge-container">
-                                        {% if leave.approved == 1%}
-                                        <span class="new badge green comm" data-badge-caption="Approved"></span> {% elif leave.disapproved == 1 %}
+                                        {% if project.approved == 1%}
+                                        <span class="new badge green comm" data-badge-caption="Approved"></span> {% elif project.disapproved == 1 %}
                                         <span class="new badge red comm" data-badge-caption="Not Approved"></span> {% else %}
                                         <span class="new badge blue comm" data-badge-caption="In Process"></span> {% endif %}
                                     </td>
-                                    <td class="center-align">{{ leave.comment }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

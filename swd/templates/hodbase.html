@@ -5,7 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=1024">
-    <title>SWD BITS Goa</title>
+    <title>AUGSD BITS Goa</title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -16,14 +16,14 @@
 <body>
     <nav class="nav-extended">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">&nbsp;Student Welfare Division</a>
+            <a href="#" class="brand-logo">&nbsp;AUGSD</a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class=""><a href="/profile" class="valign-wrapper"><img class="circle profileImg" src="{% static 'img/profile-swd.jpg' %}">&nbsp;{{ warden.name|title }}</a></li>
+                <li class="">{{ hfuser.name|title }}</li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
-                <li><a href="/profile" class="valign-wrapper"><img class="circle profileImg" src="{% static 'img/profile-swd.jpg' %}">&nbsp;{{ warden.name|title }}</a></li>
+                <li>{{ hfuser.name|title }}</li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
             <style>
@@ -36,7 +36,8 @@
         <div class="nav-content">
             <ul class="tabs tabs-transparent">
                 {% load main_extras %}
-                <li class="tab"><a href="/hod" class="{% active_page request 'warden' %}" target="_self">Leave Applications</a></li>
+                <li class="tab"><a href="/hod" class="{% active_page request 'hod' %}" target="_self">Project Approval</a></li>
+                <li class="tab"><a href="/project" class="{% active_page request 'faculty' %}" target="_self">Project Application</a></li>
 
             </ul>
         </div>
@@ -55,7 +56,7 @@
     </style>
     <script>
        function leaveclick(d) {
-           window.location.href = '/warden/' + $(d).data('id') +'/';
+           window.location.href = '/hod/' + $(d).data('id') +'/';
        }
         $(document).ready(function () {
             $('select').material_select();

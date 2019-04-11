@@ -16,7 +16,7 @@ def index(request):
         
         try:
             user = User.objects.get(username = username)
-            profile = Student.objects.create(user=user, name=name)
+            profile = Faculty.objects.create(user=user, name=name)
             profile.save()
         except Exception as e:
             print('Fail (Profile)')

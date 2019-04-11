@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 if PRODUCTION:
-    ALLOWED_HOSTS = ['10.10.10.121','0.0.0.0','127.0.0.1']
+    ALLOWED_HOSTS = ['10.1.2.132','0.0.0.0','127.0.0.1']
 else:
     ALLOWED_HOSTS = []
 
