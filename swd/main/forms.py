@@ -40,18 +40,20 @@ class ProjectForm(forms.ModelForm):
         fields = ['studentname','studentId','title','department','courseCode']
         exclude = ['faculty','approved', 'disapproved', 'inprocess', ]
         widgets = {
-            'department': forms.TextInput(attrs={'class': 'validate'}),
-            'courseCode': forms.TextInput(attrs={'class': 'validate'}),
+            'department': forms.Select(attrs={'class': 'validate'}),
+            'courseCode': forms.Select(attrs={'class': 'validate'}),
             'title': forms.Textarea(attrs={'class': 'materialize-textarea'}),
-
         }
         labels = {
             'studentname': _('Student Name'),
             'studentId': _('Student ID'),
-            'department': _('Department code'),
+            'department': _('Department Code'),
             'courseCode': _('Course Code'),
             'title': _('Project Title'),
-
+        }
+        choices = {
+            'courseCode': COURSE_CODES,
+            'department': DEPARTMENTS,
         }
 
 

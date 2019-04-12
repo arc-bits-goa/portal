@@ -1,6 +1,5 @@
-{% extends web %} {% block content %}
-
-
+{% extends web %}
+{% block content %}
 <div>
     <div class="section">
 
@@ -20,12 +19,7 @@
                                   </div>
                                 {% endfor %}
                             </div>
-                            <br>
-                            Department Code: CHE, EEE, ECE, CS, MECH, INSTR, MATH, PHY, CHEM, ECON, BIO, HSS, BITS
-                            <br>
-                            Course Code: F266, F366, F367, F376, F377, F491, F382
-                            <br>
-                            <div class="col-xs-4">
+                            <div class="card-action">
                                 <button class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</button>
                             </div>
                         </form>
@@ -39,7 +33,7 @@
                                     </div>
                                 {% endfor %}
                             {% endif %}
-                            <div class=red-text>
+                            <div class="red-text">
                             <p>There was a problem with form submission. Please refill.</p>
                             <h1></h1></div>
                             <form method="POST">
@@ -58,13 +52,8 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                 <br>
-                            Department Code: CHE, EEE, ECE, CS, MECH, INSTR, MATH, PHY, CHEM, ECON, BIO, HSS, BITS
-                            <br>
-                            Course Code: F266, F366, F367, F376, F377, F491, F382
-                            <br>
-                                <div class="col-xs-4">
-                                    <button class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</button>
+                                <div class="card-action">
+                                    <a class="btn btn-block bg-green waves-effect" type="submit">SUBMIT</a>
                                 </div>
                             </form>
                         {% endif %}
@@ -119,4 +108,10 @@
       padding-right:9%;
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+</script>
 {% endblock %}

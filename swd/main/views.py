@@ -109,7 +109,7 @@ def project(request):
         'option' : 0,
         'hfuser': faculty,
         'form': form,
-        'web':web
+        'web': web
     }
 
     projectContext = {
@@ -126,11 +126,13 @@ def project(request):
 
             context = {
                 'option': 1,
+                'web': web
             }
         else:
             context = {
                 'option': 2,
-                'form': form
+                'form': form,
+                'web': web
             }
             print(form.errors)
     return render(request, "project.html", dict(context, **projectContext))
