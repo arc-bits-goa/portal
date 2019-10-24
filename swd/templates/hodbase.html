@@ -58,6 +58,28 @@
        function leaveclick(d) {
            window.location.href = '/hod/' + $(d).data('id') +'/';
        }
+
+       function sendUpdateRequest(id, approved, text) {
+           $.post(`/hod/${id}/`, { "approved": approved })
+               .done(function() {
+                   $(`#status-${id}`).text(text);
+               });
+       }
+
+       function approveButton(elem) {
+           let id = $(elem).parent().data('id');
+           sendUpdateRequest(id, 1, "Approved");
+
+           return true;
+       }
+
+       function disapproveButton(elem) {
+           let id = $(elem).parent().data('id');
+           sendUpdateRequest(id, 2, "Disapproved");
+
+           return true;
+       }
+
         $(document).ready(function () {
             $('select').material_select();
         });

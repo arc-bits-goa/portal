@@ -21,16 +21,32 @@
                                         <th>Student Name </th>
                                         <th>Course Code</th>
                                         <th>Approval Status</th>
+                                        <th>Approve/Disprove</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for project in projects %}
-                                    <tr class="clickable" onclick="leaveclick(this)" data-id="{{ project.id }}">
+                                    <tr>
                                         <td>{{ project.id }}</td>
                                         <td>{{ project.faculty.name }}</td>
                                         <td>{{ project.studentname }} | {{ project.studentId }}</td>
                                         <td>{{ project.department }} | {{ project.courseCode }}</td>
-                                        <td>{% if project.approved == 1 %}Approved{% elif project.disapproved == 1 %}Disapproved{% else %}In Process{% endif %}</td>
+                                        <td id="status-{{project.id}}">
+                                            {% if project.approved == 1 %}Approved{% elif project.disapproved == 1 %}Disapproved{% else %}In Process{% endif %}
+                                        </td>
+                                        <td data-id="{{ project.id }}">
+                                            <!-- Click listeners are in hodbase.html -->
+                                            <button
+                                                class="btn {% if not project.inprocess %}disabled{% endif %} btn-{{project.id}}"
+                                                onclick="approveButton(this)">
+                                                Approve
+                                            </button>
+                                            <button
+                                                class="btn {% if not project.inprocess %}disabled{% endif %} btn-{{project.id}}"
+                                                onclick="disapproveButton(this)">
+                                                Disapprove
+                                            </button>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
