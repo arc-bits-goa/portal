@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.utils.timezone import make_aware
@@ -136,6 +136,7 @@ def project(request):
     return render(request, "project.html", dict(context, **projectContext))
 
 @login_required
+@csrf_exempt
 @user_passes_test(is_hod)
 def hodprojectapprove(request, project):
     project = Project.objects.get(id=project)
@@ -151,24 +152,26 @@ def hodprojectapprove(request, project):
     }
 
     if request.POST:
-        approved = request.POST.getlist('group1')
-        print(approved)
+        approved = request.POST["approved"]
+        print(approved, type(approved))
         
-        if '1' in approved:
+        if approved == '1':
             project.approved=True
             project.disapproved = False
             project.inprocess = False
-        elif '2' in approved:
+        elif approved == '2':
             project.disapproved=True
             project.approved = False
             project.inprocess = False
-        else:
+        elif approved == '3':
             project.inprocess = True
             project.approved = False
             project.disapproved = False
+        else:
+            return JsonResponse({ "status": "approved field should be between 1 and 3" }, status=401)
         project.save()
-        return redirect('hod')
 
-    return render(request, "hod.html", context)
+        return JsonResponse({ "status": "successful" })
 
+    return JsonResponse({ "status": "method not allowed" }, status=405)
 
